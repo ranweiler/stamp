@@ -1,0 +1,9 @@
+[package]
+authors = ["Joe Ranweiler <joe@lemma.co>"]
+name = "stamp"
+license-file = "LICENSE"
+version = "0.1.0"
+
+[dependencies]
+unicode-segmentation = "1.2.0"
+unicode-width = "0.1.4"
