@@ -1,8 +1,10 @@
 [package]
 authors = ["Joe Ranweiler <joe@lemma.co>"]
+description = "Library for manipulating rectangles of text."
 name = "stamp"
 license-file = "LICENSE"
 readme = "README.md"
+repository = "https://github.com/ranweiler/stamp"
 version = "0.1.0"
 
 [dependencies]
