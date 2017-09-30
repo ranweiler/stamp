@@ -35,7 +35,7 @@ pub struct Stamp {
 }
 
 impl Stamp {
-    pub fn new(s: &str) -> Result<Self, ()> {
+    pub fn from_rectangle(s: &str) -> Result<Self, ()> {
         let rows: Vec<String> = s.split('\n').map(|s| s.to_string()).collect();
 
         let height = rows.len();
@@ -183,17 +183,17 @@ mod tests {
     ];
 
     #[test]
-    fn test_new_valid() {
+    fn test_from_rectangle_valid() {
         for s in &VALID_STAMPS {
-            let st = Stamp::new(s);
+            let st = Stamp::from_rectangle(s);
             assert!(st.is_ok(), "Should be a valid stamp: {:?}", s);
         }
     }
 
     #[test]
-    fn test_new_invalid() {
+    fn test_from_rectangle_invalid() {
         for s in &INVALID_STAMPS {
-            let st = Stamp::new(s);
+            let st = Stamp::from_rectangle(s);
             assert!(st.is_err(), "Should not be a valid stamp: {:?}", s);
         }
     }
@@ -201,7 +201,7 @@ mod tests {
     #[test]
     fn test_render() {
         for s in &VALID_STAMPS {
-            let st = Stamp::new(s).ok().unwrap();
+            let st = Stamp::from_rectangle(s).ok().unwrap();
 
             let out = st.render();
 
@@ -214,8 +214,8 @@ mod tests {
         let s1 = "oooooooooo\noooooooooo\noooooooooo\noooooooooo";
         let s2 = "xxx\nxxx";
 
-        let st1 = Stamp::new(s1).ok().unwrap();
-        let st2 = Stamp::new(s2).ok().unwrap();
+        let st1 = Stamp::from_rectangle(s1).ok().unwrap();
+        let st2 = Stamp::from_rectangle(s2).ok().unwrap();
 
         let out_0_0 = st1.layer(&st2, 0, 0).ok().unwrap().render();
         assert_eq!(&out_0_0, "xxxooooooo\nxxxooooooo\noooooooooo\noooooooooo");
