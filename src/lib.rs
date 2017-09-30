@@ -6,6 +6,7 @@ use unicode_width::UnicodeWidthStr;
 
 
 /// `String` with Unicode width 1. The text equivalent of a pixel.
+#[derive(Clone)]
 struct Char(String);
 
 impl Char {
@@ -22,6 +23,7 @@ impl Char {
     }
 }
 
+#[derive(Clone)]
 pub struct Stamp {
     data: Vec<Vec<Char>>,  // Row-major
     height: usize,
