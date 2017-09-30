@@ -2,6 +2,7 @@
 authors = ["Joe Ranweiler <joe@lemma.co>"]
 name = "stamp"
 license-file = "LICENSE"
+readme = "README.md"
 version = "0.1.0"
 
 [dependencies]
