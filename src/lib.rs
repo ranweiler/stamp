@@ -35,6 +35,10 @@ pub struct Stamp {
 }
 
 impl Stamp {
+    pub fn new(s: &str) -> Result<Self, ()> {
+        Self::from_rectangle(&to_rectangle(s)?)
+    }
+
     pub fn from_rectangle(s: &str) -> Result<Self, ()> {
         let rows: Vec<String> = s.split('\n').map(|s| s.to_string()).collect();
 
@@ -122,10 +126,40 @@ impl Stamp {
     }
 }
 
+fn to_rectangle(s: &str) -> Result<String, ()> {
+    if s.is_empty() {
+        return Err(());
+    }
+
+    let rows: Vec<String> = s.split('\n').map(|s| s.to_string()).collect();
+
+    let max_width = rows
+        .iter()
+        .map(|r| r.width())
+        .max()
+        .unwrap();
+
+    let mut out = String::new();
+
+    for (i, r) in rows.iter().enumerate() {
+        out += &r.to_string();
+        let w = r.width();
+        let p = max_width - w;
+        for _ in 0..p {
+            out += " ";
+        }
+        if i != rows.len() - 1 {
+            out += "\n";
+        }
+    }
+
+    Ok(out)
+}
+
 
 #[cfg(test)]
 mod tests {
-    use super::Stamp;
+    use super::{Stamp, to_rectangle};
 
     const VALID_STAMPS_LEN: usize = 12;
     type ValidStamps = [&'static str; VALID_STAMPS_LEN];
@@ -225,5 +259,19 @@ mod tests {
 
         let out_8_2 = st1.layer(&st2, 8, 2).ok().unwrap().render();
         assert_eq!(&out_8_2, "oooooooooo\noooooooooo\nooooooooxx\nooooooooxx");
+    }
+
+    #[test]
+    fn test_to_rectangle() {
+        assert!(to_rectangle("").is_err());
+
+        assert_eq!(to_rectangle("a").ok().unwrap(), "a");
+        assert_eq!(to_rectangle("a\n").ok().unwrap(), "a\n ");
+        assert_eq!(to_rectangle("\na").ok().unwrap(), " \na");
+        assert_eq!(to_rectangle("\nab").ok().unwrap(), "  \nab");
+        assert_eq!(to_rectangle("a\nb").ok().unwrap(), "a\nb");
+        assert_eq!(to_rectangle("ab\n").ok().unwrap(), "ab\n  ");
+        assert_eq!(to_rectangle("\na\nbc").ok().unwrap(), "  \na \nbc");
+        assert_eq!(to_rectangle("aaa\nb\ncc").ok().unwrap(), "aaa\nb  \ncc ");
     }
 }
