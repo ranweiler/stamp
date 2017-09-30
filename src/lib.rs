@@ -21,6 +21,10 @@ impl Char {
 
         Ok(c)
     }
+
+    pub fn to_string(&self) -> String {
+        self.0.clone()
+    }
 }
 
 #[derive(Clone)]
