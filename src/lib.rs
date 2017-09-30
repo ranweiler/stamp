@@ -102,6 +102,24 @@ impl Stamp {
         self.rows().join("\n")
     }
 
+    pub fn layer(&self, other: &Stamp, col: usize, row: usize) -> Result<Stamp, ()> {
+        if self.width() <= col || self.height() <= row {
+            return Err(());
+        }
+
+        let mut stamp = self.clone();
+
+        let max_col_index = std::cmp::min(col + other.width(), self.width());
+        let max_row_index = std::cmp::min(row + other.height(), self.height());
+
+        for r in row..max_row_index {
+            for c in col..max_col_index {
+                stamp.data[r][c] = other.data[r - row][c - col].clone();
+            }
+        }
+
+        Ok(stamp)
+    }
 }
 
 
@@ -189,5 +207,23 @@ mod tests {
 
             assert_eq!(&out, s, "{:?} should equal {:?}", out, s);
         }
+    }
+
+    #[test]
+    fn test_layer() {
+        let s1 = "oooooooooo\noooooooooo\noooooooooo\noooooooooo";
+        let s2 = "xxx\nxxx";
+
+        let st1 = Stamp::new(s1).ok().unwrap();
+        let st2 = Stamp::new(s2).ok().unwrap();
+
+        let out_0_0 = st1.layer(&st2, 0, 0).ok().unwrap().render();
+        assert_eq!(&out_0_0, "xxxooooooo\nxxxooooooo\noooooooooo\noooooooooo");
+
+        let out_3_1 = st1.layer(&st2, 3, 1).ok().unwrap().render();
+        assert_eq!(&out_3_1, "oooooooooo\noooxxxoooo\noooxxxoooo\noooooooooo");
+
+        let out_8_2 = st1.layer(&st2, 8, 2).ok().unwrap().render();
+        assert_eq!(&out_8_2, "oooooooooo\noooooooooo\nooooooooxx\nooooooooxx");
     }
 }
