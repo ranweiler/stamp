@@ -97,6 +97,11 @@ impl Stamp {
             })
             .collect()
     }
+
+    pub fn render(&self) -> String {
+        self.rows().join("\n")
+    }
+
 }
 
 
@@ -172,6 +177,17 @@ mod tests {
         for s in &INVALID_STAMPS {
             let st = Stamp::new(s);
             assert!(st.is_err(), "Should not be a valid stamp: {:?}", s);
+        }
+    }
+
+    #[test]
+    fn test_render() {
+        for s in &VALID_STAMPS {
+            let st = Stamp::new(s).ok().unwrap();
+
+            let out = st.render();
+
+            assert_eq!(&out, s, "{:?} should equal {:?}", out, s);
         }
     }
 }
